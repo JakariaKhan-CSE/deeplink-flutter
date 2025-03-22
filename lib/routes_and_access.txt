@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local_canada/about%20us.dart';
+import 'package:local_canada/feature/Travel/travel_home.dart';
+import 'package:local_canada/feature/moreApps.dart';
+import 'package:local_canada/home_page.dart';
+import 'package:local_canada/splash_screen.dart';
+
+final GoRouter router = GoRouter(
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SplashScreen();
+      },
+      routes: <RouteBase>[
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) {
+            final String image = state.extra as String;
+            return  HomePage(image: image);
+          },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'about',
+              builder: (BuildContext context, GoRouterState state) {
+
+                return  AboutUs();
+              },
+              routes: <RouteBase>[
+                GoRoute(
+                  path: 'more_apps',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final String image = state.extra as String;
+                    return  MoreApps();
+                  },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: 'travel',
+                      builder: (BuildContext context, GoRouterState state) {
+
+                        return  TravelHomePage();
+                      },
+                      routes: <RouteBase>[
+                        GoRoute(
+                          path: 'travel',
+                          builder: (BuildContext context, GoRouterState state) {
+
+                            return  TravelHomePage();
+                          },
+
+                        ),
+                      ],
+                    ),
+                  ],
+
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+
+
+
+      // routes: <RouteBase>[
+      //   GoRoute(
+      //     path: 'details',
+      //     builder: (BuildContext context, GoRouterState state) {
+      //       return const DetailsScreen();
+      //     },
+      //   ),
+      // ],
+    ),
+  ],
+);
+
+
+
+How to Navigate to TravelHomePage
+To navigate to TravelHomePage, use:
+
+
+context.go('/home/about/more_apps/travel');
+or if you want to push the travel page instead of replacing it:
+
+
+context.push('/home/about/more_apps/travel');
+Explanation of the Path:
+/home → Navigates to HomePage
+
+/home/about → Navigates to AboutUs
+
+/home/about/more_apps → Navigates to MoreApps
+
+/home/about/more_apps/travel → Finally navigates to TravelHomePage
+
+Let me know if you need any modifications! 🚀
