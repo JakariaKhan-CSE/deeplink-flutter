@@ -1,4 +1,30 @@
 # flutter_deeplink
+#For Android
+Add the following to android/app/src/main/AndroidManifest.xml:
+<intent-filter>
+  <action android:name="android.intent.action.VIEW" />
+  <category android:name="android.intent.category.DEFAULT" />
+  <category android:name="android.intent.category.BROWSABLE" />
+  <data android:host="yourapp.com" android:scheme="https" />
+</intent-filter>
+
+
+#For iOS
+Add the following to ios/Runner/Info.plist:
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLName</key>
+    <string>yourapp.com</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>https</string>
+    </array>
+  </dict>
+</array>
+
 
 A new Flutter project.
 
