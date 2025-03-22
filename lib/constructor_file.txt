@@ -1,0 +1,192 @@
+// Optimal Solution: Pass Both TravelResModel and travelId
+// 1. Update the TravelDetailsScreen Constructor
+// Modify the TravelDetailsScreen to accept both TravelResModel and travelId:
+
+// dart
+// Copy
+// class TravelDetailsScreen extends StatelessWidget {
+//   final TravelResModel travel; // For immediate display
+//   final String travelId; // For deep linking and sharing
+
+//   TravelDetailsScreen({required this.travel, required this.travelId});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Travel Details')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Travel ID: ${travel.id}'),
+//             Text('Travel Name: ${travel.name}'),
+//             ElevatedButton(
+//               onPressed: () {
+//                 _shareTravelLink(context);
+//               },
+//               child: Text('Share Link'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   void _shareTravelLink(BuildContext context) {
+//     final String deepLink = 'https://yourapp.com/travel/$travelId';
+//     Share.share('Check out this travel: $deepLink');
+//   }
+// }
+// 2. Pass Data During Navigation
+// When navigating to the TravelDetailsScreen, pass both the TravelResModel and travelId:
+
+// dart
+// Copy
+// context.go(
+//   '/travel/${travel.id}',
+//   extra: {
+//     'travel': travel, // Pass the TravelResModel
+//     'travelId': travel.id, // Pass the travelId
+//   },
+// );
+// 3. Update GoRouter Configuration
+// Modify the GoRouter configuration to handle the extra parameter:
+
+// dart
+// Copy
+// final GoRouter router = GoRouter(
+//   routes: [
+//     GoRoute(
+//       path: '/',
+//       builder: (context, state) => HomeScreen(),
+//     ),
+//     GoRoute(
+//       path: '/travel/:travelId',
+//       builder: (context, state) {
+//         final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+//         final TravelResModel travel = extra['travel'] as TravelResModel;
+//         final String travelId = extra['travelId'] as String;
+//         return TravelDetailsScreen(travel: travel, travelId: travelId);
+//       },
+//     ),
+//   ],
+// );
+// 4. Handle Deep Links
+// When the app is opened via a deep link (e.g., https://yourapp.com/travel/1), you won't have the TravelResModel data immediately. In this case, you can fetch the travel details using the travelId.
+
+// Update the TravelDetailsScreen to handle both scenarios:
+
+// dart
+// Copy
+// class TravelDetailsScreen extends StatelessWidget {
+//   final TravelResModel? travel; // Optional, for immediate display
+//   final String travelId; // Required for deep linking
+
+//   TravelDetailsScreen({this.travel, required this.travelId});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // If travel data is not provided, fetch it using travelId
+//     if (travel == null) {
+//       return FutureBuilder<TravelResModel>(
+//         future: _fetchTravelDetails(travelId), // Fetch from backend
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return Center(child: CircularProgressIndicator());
+//           } else if (snapshot.hasError) {
+//             return Center(child: Text('Error loading travel details'));
+//           } else {
+//             final TravelResModel travel = snapshot.data!;
+//             return _buildTravelDetails(travel);
+//           }
+//         },
+//       );
+//     } else {
+//       return _buildTravelDetails(travel!);
+//     }
+//   }
+
+//   Widget _buildTravelDetails(TravelResModel travel) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Travel Details')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Travel ID: ${travel.id}'),
+//             Text('Travel Name: ${travel.name}'),
+//             ElevatedButton(
+//               onPressed: () {
+//                 _shareTravelLink(context);
+//               },
+//               child: Text('Share Link'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Future<TravelResModel> _fetchTravelDetails(String travelId) async {
+//     // Simulate fetching travel details from the backend
+//     await Future.delayed(Duration(seconds: 2)); // Simulate network delay
+//     return TravelResModel(id: travelId, name: 'Travel $travelId');
+//   }
+
+//   void _shareTravelLink(BuildContext context) {
+//     final String deepLink = 'https://yourapp.com/travel/$travelId';
+//     Share.share('Check out this travel: $deepLink');
+//   }
+// }
+// 5. Navigate from Home Screen
+// When navigating from the home screen, pass the TravelResModel and travelId:
+
+// dart
+// Copy
+// class HomeScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Travel List')),
+//       body: ListView.builder(
+//         itemCount: travelList.length,
+//         itemBuilder: (context, index) {
+//           final travel = travelList[index];
+//           return ListTile(
+//             title: Text(travel.name),
+//             onTap: () {
+//               context.go(
+//                 '/travel/${travel.id}',
+//                 extra: {
+//                   'travel': travel,
+//                   'travelId': travel.id,
+//                 },
+//               );
+//             },
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// // Example travel data
+// final List<TravelResModel> travelList = [
+//   TravelResModel(id: '1', name: 'Travel 1'),
+//   TravelResModel(id: '2', name: 'Travel 2'),
+// ];
+
+// class TravelResModel {
+//   final String id;
+//   final String name;
+
+//   TravelResModel({required this.id, required this.name});
+// }
+// Summary
+// Pass both TravelResModel and travelId to the TravelDetailsScreen for immediate display and deep linking.
+
+// Use the extra parameter in GoRouter to pass multiple pieces of data.
+
+// Handle deep links by fetching travel details using the travelId if the TravelResModel is not provided.
+
+// This approach ensures optimal performance and a seamless user experience.
