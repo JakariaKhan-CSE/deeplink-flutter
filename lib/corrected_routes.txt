@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local_canada/feature/Travel/travel_details.dart';
+import 'package:local_canada/feature/Travel/travel_home.dart';
+import 'package:local_canada/home_page.dart';
+import 'package:local_canada/model/travel_response.dart';
+import 'package:local_canada/splash_screen.dart';
+
+final GoRouter router = GoRouter(
+  initialLocation: '/splash',  // Ensures app opens correctly on deep links
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/splash',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SplashScreen();
+      },
+    ),
+    GoRoute(
+      path: '/home',
+      builder: (BuildContext context, GoRouterState state) {
+        // final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        // final String image = extra['image'] as String ?? '';
+        return  HomePage();
+      },
+
+    ),
+
+    GoRoute(
+      path: '/travel',
+      builder: (BuildContext context, GoRouterState state) {
+        // final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        // final TravelResult travel = extra['travel'] as TravelResult;
+        // final int travelId = extra['travelId'] as int;
+        // //final String travelId = state.pathParameters['travelId']!;
+        return  TravelHomePage();
+      },
+
+    ),
+    GoRoute(
+      path: '/travel/:travelId',
+      builder: (BuildContext context, GoRouterState state) {
+        // final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        // final TravelResult travel = extra['travel'] as TravelResult;
+        // final int travelId = extra['travelId'] as int;
+        // //final String travelId = state.pathParameters['travelId']!;
+        // return  TravelDetails(travel: travel, travelId: travelId);
+        final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
+        //  final TravelResult travel = extra?['travel'] as TravelResult;
+        final int travelId = int.tryParse(state.pathParameters['travelId'] ?? '0') ?? 0;
+        //return TravelDetails(travel: travel, travelId: travelId);
+        return TravelDetails(travelId: travelId);
+      },
+
+    ),
+  ],
+);
+
+
